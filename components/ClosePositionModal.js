@@ -3,23 +3,13 @@ import { Modal, useNotification, Input } from "web3uikit";
 import collateralLeverAbi from "../constants/CollateralLever.json"
 import networkMapping from "../constants/networkMapping.json"
 import { useMoralis } from "react-moralis"
+import { useState, useEffect } from "react";
 
 export default function ClosePositionModal({ isVisible, onClose, positionId }) {
     const dispatch = useNotification()
     const { isWeb3Enabled, chainId } = useMoralis()
-    const chainString = chainId ? parseInt(chainId).toString() : "31337"
-
-
-    const contractAddress = networkMapping[chainString].collateralLever[0]
-
-    const { runContractFunction: closePosition } = useWeb3Contract({
-        contractAddress: contractAddress,
-        abi: collateralLeverAbi,
-        functionName: "closePosition",
-        params: {
-            positionId: positionId,
-        }
-    })
+    const { runContractFunction } = useWeb3Contract()
+    const isGoerli = parseInt(chainId) == 5//仅支持goerli      
 
     const handleCallBack = (isSuccess, successMsg, title, errMsg) => {
         const msg = isSuccess ? successMsg : errMsg.message
@@ -40,11 +30,23 @@ export default function ClosePositionModal({ isVisible, onClose, positionId }) {
             onCloseButtonPressed={onClose}
             onOk={() => {
                 const successMsg = "平仓成功"
-                const title = "平仓 返回值"
-                closePosition({
-                    onSuccess: () => handleCallBack(true, successMsg, title),
-                    onError: (e) => handleCallBack(false, successMsg, title, e),
-                })
+                const title = "平仓返回值"
+                if (isGoerli) {
+                    const contractAddress = networkMapping[parseInt(chainId).toString()].collateralLever[0]
+                    console.log(`开始平仓`)
+                    runContractFunction({
+                        contractAddress: contractAddress,
+                        abi: collateralLeverAbi,
+                        functionName: "closePosition",
+                        params: {
+                            positionId: positionId,
+                        },
+                        onSuccess: () => handleCallBack(true, successMsg, title),
+                        onError: (e) => handleCallBack(false, successMsg, title, e),
+                    })
+                }else{
+                    onClose()
+                }
             }
             }>
             <div
@@ -65,7 +67,7 @@ export default function ClosePositionModal({ isVisible, onClose, positionId }) {
                             marginRight: '1em'
                         }}
                     >
-                        确定要平仓?  positionId: {positionId}
+                        {isGoerli?`确定要平仓?  positionId: ${positionId}`:"仅支持goerli测试网, 请切换网络"}
                     </p>
                 </div>
             </div>

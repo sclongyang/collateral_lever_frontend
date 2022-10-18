@@ -7,21 +7,18 @@ import { useState, useEffect } from "react";
 
 
 export default function Home() {
-    const { isWeb3Enabled, chainId, account } = useMoralis()
-    const chainString = chainId ? parseInt(chainId).toString() : "31337"
-    const contractAddress = networkMapping[chainString].collateralLever[0]
+    const [isModalVisible, setModalVisible] = useState(false)
+    const [popMsg, setPopMsg] = useState("")
+    const { isWeb3Enabled, chainId, account } = useMoralis()   
     const { runContractFunction } = useWeb3Contract()
     const dispatch = useNotification()
+    
 
-    const [isModalVisible, setModalVisible] = useState(false)
-    useEffect(() => {
-        if (isWeb3Enabled) {
-        }
-        if (isModalVisible == false) {
-            setModalVisible(false)
-        }
+    // useEffect(() => {
+    //     if (isWeb3Enabled) {
+    //     }        
 
-    }, [isWeb3Enabled, account, chainId, isModalVisible])
+    // }, [isWeb3Enabled, account, chainId])
 
     const openPosition = async (data) => {
         const coinPair = data.data[0].inputResult.toString()
@@ -33,10 +30,14 @@ export default function Home() {
         const lever = data.data[3].inputResult.toString()
         const longOrShort = data.data[4].inputResult.toString()
 
-        if (!coinPair.includes("-") || investmentCoin.includes(":") || isNaN(investmentAmount) || investmentAmount === "0"||lever.includes(":")||longOrShort.includes(":")) {
+        const chainIdDec = parseInt(chainId)        
+        const isGoerli = chainIdDec==5 //仅支持goerli
+        if (!coinPair.includes("-") || investmentCoin.includes(":") || isNaN(investmentAmount) || investmentAmount === "0"||lever.includes(":")||longOrShort.includes(":")||!isGoerli) {
+            setPopMsg(isGoerli?"有参数未填或错误, 请重新填写":"仅支持goerli测试网, 请切换网络")            
             setModalVisible(true)
             return
         }
+        const contractAddress = networkMapping[chainIdDec.toString()].collateralLever[0]
         investmentAmount = ethers.utils.parseUnits(investmentAmount, 18).toString()
 
         console.log(`begin open position`)
@@ -102,7 +103,7 @@ export default function Home() {
                                         marginRight: '1em'
                                     }}
                                 >
-                                    有参数未填或错误, 请重新填写
+                                    {popMsg}
                                 </p>
                             </div>
                         </div>
