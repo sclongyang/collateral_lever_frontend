@@ -9,7 +9,7 @@ export default function PositionBox({ userAddress, cTokenCollateralAddress, cTok
     const { account, isWeb3Enabled } = useMoralis()
     const { runContractFunction } = useWeb3Contract()
     const dispatch = useNotification()
-
+    
     const [tokenName, setTokenName] = useState("")
     const [tokenDesc, setTokenDesc] = useState("")
     const [imageURL, setImageURL] = useState("")
