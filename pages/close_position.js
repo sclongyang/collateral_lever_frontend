@@ -5,7 +5,11 @@ import PositionBox from "../components/PositionBox";
 
 export default function ClosePosition() {
     const { isWeb3Enabled, account } = useMoralis()    
-    const { loading, error, data: positions } = useQuery(GET_ACTIVE_ITEMS)
+    const { loading, error, data: positions } = useQuery(GET_ACTIVE_ITEMS, {
+        variables: {
+          userAddress: account
+        },
+      });
     console.log(account)
     console.log(`loading:${loading}`)
     console.log(`positions:${positions}`)
@@ -30,6 +34,7 @@ export default function ClosePosition() {
                                     collateralAmountOfCollateralToken={collateralAmountOfCollateralToken}
                                     isShort={isShort}
                                     positionId={positionId}
+                                    key={`${positionId}`}
                                 />
                             )
                         })
