@@ -8,7 +8,7 @@ export default function ClosePositionModal({ isVisible, onClose, positionId }) {
     const dispatch = useNotification()
     const { isWeb3Enabled, chainId } = useMoralis()
     const chainString = chainId ? parseInt(chainId).toString() : "31337"
-    
+
 
     const contractAddress = networkMapping[chainString].collateralLever[0]
 
@@ -47,6 +47,28 @@ export default function ClosePositionModal({ isVisible, onClose, positionId }) {
                 })
             }
             }>
+            <div
+                style={{
+                    display: 'grid',
+                    placeItems: 'center',
+                    width: '100%'
+                }}
+            >
+                <div
+                    style={{
+                        display: 'flex'
+                    }}
+                >
+                    <p
+                        style={{
+                            fontWeight: 600,
+                            marginRight: '1em'
+                        }}
+                    >
+                        确定要平仓?  positionId: {positionId}
+                    </p>
+                </div>
+            </div>
         </Modal>
     )
 }

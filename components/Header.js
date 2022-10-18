@@ -7,10 +7,10 @@ export default function Header() {
             <h1 className="py-4 px-4 font-bold text-3xl">Collateral Lever</h1>
             <div className="flex flex-row items-center">
                 <Link href="/">
-                    <a className="mr-4 p-6">开仓</a>
+                    <a className="mr-4 p-6 text-2xl">开仓</a>
                 </Link>
                 <Link href="/close_position">
-                    <a className="mr-4 p-6">平仓</a>
+                    <a className="mr-4 p-6 text-2xl">平仓</a>
                 </Link>
                 <ConnectButton moralisAuth={false} />
             </div>

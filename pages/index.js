@@ -102,7 +102,7 @@ export default function Home() {
                                         marginRight: '1em'
                                     }}
                                 >
-                                    有参数未填或错误
+                                    有参数未填或错误, 请重新填写
                                 </p>
                             </div>
                         </div>
@@ -112,8 +112,10 @@ export default function Home() {
                         title="开仓"
                         buttonConfig={{
                             theme: "colored",
-                            color: "blue",
-                            text: "确认开仓"
+                            color: "green",
+                            text: "确认开仓",
+                            disabled: false,
+                            size: "large"
 
                         }}
                         onSubmit={openPosition}
