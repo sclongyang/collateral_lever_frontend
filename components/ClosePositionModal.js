@@ -1,9 +1,8 @@
 import { useWeb3Contract } from "react-moralis";
 import { Modal, useNotification, Input } from "web3uikit";
 import collateralLeverAbi from "../constants/CollateralLever.json"
-import { ethers } from "ethers"
 import networkMapping from "../constants/networkMapping.json"
-import {useMoralis} from "react-moralis"
+import { useMoralis } from "react-moralis"
 
 export default function ClosePositionModal({ isVisible, onClose, positionId }) {
     const dispatch = useNotification()

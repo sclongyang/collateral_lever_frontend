@@ -12,26 +12,27 @@ export default function PositionBox({ userAddress, cTokenCollateralAddress, cTok
 
     return (
         <div>
-            (<div>
+            <div>
                 <ClosePositionModal
                     isVisible={showModal}
                     positionId={positionId}
                     onClose={() => setShowModal(false)}
                 />
                 <Card
-                    title={positionId}
+                    // title={positionId}
                     onClick={handleCardClick}
                 >
                     <div className="p-2">
                         <div className="flex flex-col items-end gap-2">
                             <div>PositionId:{positionId}</div>
-                            {/* <div>
-                                {ethers.utils.formatEther()} ETH
-                            </div> */}
+                            <div>PositionId:{positionId}</div>
+                            <div>PositionId:{positionId}</div>
+                            <div>PositionId:{positionId}</div>
+                            <div>点击平仓</div>
                         </div>
                     </div>
                 </Card>
-            </div>)
+            </div>
         </div>
     )
 }

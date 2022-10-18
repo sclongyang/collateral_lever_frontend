@@ -4,8 +4,11 @@ import GET_ACTIVE_ITEMS from "../constants/subgraphQueries";
 import PositionBox from "../components/PositionBox";
 
 export default function ClosePosition() {
-    const { isWeb3Enabled } = useMoralis()
+    const { isWeb3Enabled, account } = useMoralis()    
     const { loading, error, data: positions } = useQuery(GET_ACTIVE_ITEMS)
+    console.log(account)
+    console.log(`loading:${loading}`)
+    console.log(`positions:${positions}`)
 
     return (
         <div className="flex flex-wrap">
@@ -13,23 +16,28 @@ export default function ClosePosition() {
                 loading || !positions ? (
                     <div>Loading...</div>
                 ) : (
-                    positions.activePositions.map((position) => {
-                        console.log(`active positionId: ${position.positionId}`)
-                        const { userAddress, cTokenCollateralAddress, cTokenBorrowingAddress, collateralAmountOfCollateralToken, isShort, positionId } = position
-                        return (
-                            <PositionBox
-                                userAddress={userAddress}
-                                cTokenCollateralAddress={cTokenCollateralAddress}
-                                cTokenBorrowingAddress={cTokenBorrowingAddress}
-                                collateralAmountOfCollateralToken={collateralAmountOfCollateralToken}
-                                isShort={isShort}
-                                positionId={positionId}
-                            />
+                    positions.activePositions.length == 0 ?
+                        (<div>你目前没有仓位</div>)
+                        :
+                        (positions.activePositions.map((position) => {
+                            console.log(`active positionId: ${position.positionId}`)
+                            const { userAddress, cTokenCollateralAddress, cTokenBorrowingAddress, collateralAmountOfCollateralToken, isShort, positionId } = position
+                            return (
+                                <PositionBox
+                                    userAddress={userAddress}
+                                    cTokenCollateralAddress={cTokenCollateralAddress}
+                                    cTokenBorrowingAddress={cTokenBorrowingAddress}
+                                    collateralAmountOfCollateralToken={collateralAmountOfCollateralToken}
+                                    isShort={isShort}
+                                    positionId={positionId}
+                                />
+                            )
+                        })
+
                         )
-                    })
                 )
             ) : (
-                <div>Web3 Currently Not Enabled</div>
+                <div>请连接钱包</div>
             )}
         </div>
     )
