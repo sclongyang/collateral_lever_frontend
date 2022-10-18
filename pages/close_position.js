@@ -11,11 +11,9 @@ export default function ClosePosition() {
         },
       });
     console.log(account)
-    console.log(`loading:${loading}`)
-    console.log(`positions:${positions}`)
 
     return (
-        <div className="flex flex-wrap">
+        <div className="flex flex-wrap  gap-1">
             {isWeb3Enabled ? (
                 loading || !positions ? (
                     <div>Loading...</div>

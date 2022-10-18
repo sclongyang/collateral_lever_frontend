@@ -1,16 +1,27 @@
 import networkMapping from "../constants/networkMapping.json"
-import { Form, useNotification } from "web3uikit";
-import {ethers} from "ethers"
+import { Radios, Modal, Form, useNotification } from "web3uikit";
+import { ethers } from "ethers"
 import { useMoralis, useWeb3Contract } from "react-moralis";
 import collateralLeverAbi from "../constants/CollateralLever.json"
+import { useState, useEffect } from "react";
 
 
 export default function Home() {
-    const { isWeb3Enabled, chainId } = useMoralis()
+    const { isWeb3Enabled, chainId, account } = useMoralis()
     const chainString = chainId ? parseInt(chainId).toString() : "31337"
     const contractAddress = networkMapping[chainString].collateralLever[0]
-    const {runContractFunction} = useWeb3Contract()
+    const { runContractFunction } = useWeb3Contract()
     const dispatch = useNotification()
+
+    const [isModalVisible, setModalVisible] = useState(false)
+    useEffect(() => {
+        if (isWeb3Enabled) {
+        }
+        if (isModalVisible == false) {
+            setModalVisible(false)
+        }
+
+    }, [isWeb3Enabled, account, chainId, isModalVisible])
 
     const openPosition = async (data) => {
         const coinPair = data.data[0].inputResult.toString()
@@ -18,15 +29,17 @@ export default function Home() {
         const tokenBase = coinArray[0]
         const tokenQuote = coinArray[1]
         const investmentCoin = data.data[1].inputResult.toString()
-        const investmentAmount = data.data[2].inputResult.toString()
+        const investmentAmount = data.data[2].inputResult.toString() || "0"
         const lever = data.data[3].inputResult.toString()
-        const longOrShort = data.data[4].inputResult .toString()       
-        investmentAmount = ethers.utils.parseUnits(investmentAmount,18).toString()        
-        
-        console.log(`:${longOrShort}`)
-        console.log(`isshort?:${longOrShort.includes("short")}`)
-        console.log(`isquote:${investmentCoin == tokenQuote}`)
-        console.log(`begin open position`)        
+        const longOrShort = data.data[4].inputResult.toString()
+
+        if (!coinPair.includes("-") || investmentCoin.includes(":") || isNaN(investmentAmount) || investmentAmount === "0"||lever.includes(":")||longOrShort.includes(":")) {
+            setModalVisible(true)
+            return
+        }
+        investmentAmount = ethers.utils.parseUnits(investmentAmount, 18).toString()
+
+        console.log(`begin open position`)
         await runContractFunction({
             params: {
                 contractAddress: contractAddress,
@@ -38,7 +51,7 @@ export default function Home() {
                     investmentAmount: investmentAmount,
                     investmentIsQuote: investmentCoin == tokenQuote,
                     lever: lever,
-                    isShort: longOrShort.includes("short"),                    
+                    isShort: longOrShort.includes("short"),
                 }
             },
             onSuccess: () => handleCallBack(true, "openPosition success!", "openPosition"),
@@ -46,21 +59,54 @@ export default function Home() {
         })
     }
 
-    const handleCallBack = (isSuccess, successMsg, title, errMsg)=>{
-        const msg = isSuccess?successMsg:errMsg
+    const handleCallBack = (isSuccess, successMsg, title, errMsg) => {
+        const msg = isSuccess ? successMsg : errMsg
         console.log(msg)
         dispatch({
-            type: isSuccess?"success":"error",
+            type: isSuccess ? "success" : "error",
             message: msg,
             title: title,
             position: "topR"
         })
     }
 
+    const OnCloseModal = () => {
+        setModalVisible(false)
+    }
+
     return (
-        <div className="flex flex-wrap">
+        <div className="flex flex-col items-center">
             {isWeb3Enabled ? (
                 <div className="flex flex-col items-center">
+                    <Modal
+                        title="WARNING"
+                        isVisible={isModalVisible}
+                        onCancel={OnCloseModal}
+                        onCloseButtonPressed={OnCloseModal}
+                        onOk={OnCloseModal}>
+                        <div
+                            style={{
+                                display: 'grid',
+                                placeItems: 'center',
+                                width: '100%'
+                            }}
+                        >
+                            <div
+                                style={{
+                                    display: 'flex'
+                                }}
+                            >
+                                <p
+                                    style={{
+                                        fontWeight: 600,
+                                        marginRight: '1em'
+                                    }}
+                                >
+                                    有参数未填或错误
+                                </p>
+                            </div>
+                        </div>
+                    </Modal>
                     <Form
                         id="OpenPositionForm"
                         title="开仓"
@@ -76,11 +122,11 @@ export default function Home() {
                             {
                                 "name": "coinPair",
                                 "type": "radios",
-                                "value": "币对(其他币对测试网不支持):",
+                                "value": "币对:",
                                 "options": [
                                     "DAI-COMP",
                                     //   "DAI_USDC",                                                  
-                                ]
+                                ],
                             },
                             {
                                 "name": "investmentCoin",
@@ -119,7 +165,7 @@ export default function Home() {
                     />
                 </div>
             ) : (
-                <div>Web3 Currently Not Enabled</div>
+                <div>请连接钱包</div>
             )}
         </div>
     )

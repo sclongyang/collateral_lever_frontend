@@ -6,7 +6,7 @@ const GET_ACTIVE_ITEMS = gql`
     first: 5
     orderBy: id
     orderDirection: desc
-    where: {userAddress: $userAddress}
+    where: {isClosed:false, userAddress: $userAddress}
   ) {
         id
         userAddress
@@ -18,22 +18,4 @@ const GET_ACTIVE_ITEMS = gql`
   }
 }
 `
-// const GET_ACTIVE_ITEMS = gql`
-//   query ActivePositions($address:String!){
-//     activePositions(
-//     first: 20
-//     orderBy: id
-//     orderDirection: desc
-//     where: {isClosed: false, userAddress: $address}
-//     ) {
-//         id
-//         userAddress
-//         cTokenCollateralAddress
-//         cTokenBorrowingAddress
-//         collateralAmountOfCollateralToken
-//         isShort
-//         positionId
-//     }
-//   }
-// `
 export default GET_ACTIVE_ITEMS

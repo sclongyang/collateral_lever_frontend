@@ -8,6 +8,7 @@ export default function ClosePositionModal({ isVisible, onClose, positionId }) {
     const dispatch = useNotification()
     const { isWeb3Enabled, chainId } = useMoralis()
     const chainString = chainId ? parseInt(chainId).toString() : "31337"
+    
 
     const contractAddress = networkMapping[chainString].collateralLever[0]
 
@@ -30,7 +31,6 @@ export default function ClosePositionModal({ isVisible, onClose, positionId }) {
             position: "topR"
         })
         onClose && onClose()
-        setNewPrice("0")
     }
 
     return (

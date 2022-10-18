@@ -1,1 +1,17 @@
-{"5":{"collateralLever":["0xf8dDa8376819d2a15bd7A9D772965e411e29A982"]},"1337":{"collateralLever":["0xf8dDa8376819d2a15bd7A9D772965e411e29A982"]},"31337":{"collateralLever":["0xf8dDa8376819d2a15bd7A9D772965e411e29A982"]}}
+{
+    "5": {
+        "collateralLever": [
+            "0xf8dDa8376819d2a15bd7A9D772965e411e29A982"
+        ]
+    },
+    "1337": {
+        "collateralLever": [
+            "0xf8dDa8376819d2a15bd7A9D772965e411e29A982"
+        ]
+    },
+    "31337": {
+        "collateralLever": [
+            "0xf8dDa8376819d2a15bd7A9D772965e411e29A982"
+        ]
+    }
+}
