@@ -6,9 +6,12 @@ export default function Header() {
         <nav className="p-5 border-b-2 flex flex-row justify-between items-center">
             <h1 className="py-4 px-4 font-bold text-3xl">Collateral Lever</h1>
             <div className="flex flex-row items-center">
-                {/* <Link href="/">
-                    <a className="mr-4 p-6">dd</a>
-                </Link> */}
+                <Link href="/">
+                    <a className="mr-4 p-6">开仓</a>
+                </Link>
+                <Link href="/close_position">
+                    <a className="mr-4 p-6">平仓</a>
+                </Link>
                 <ConnectButton moralisAuth={false} />
             </div>
         </nav>
