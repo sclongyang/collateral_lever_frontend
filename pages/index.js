@@ -14,6 +14,7 @@ export default function Home() {
     const { runContractFunction } = useWeb3Contract()
     const dispatch = useNotification()
 
+
     const [popMsg, setPopMsg] = useState("")
     const [needRefresh, setNeedRefresh] = useState(false)
     useEffect(() => {
@@ -27,34 +28,36 @@ export default function Home() {
         const coinPair = data.data[0].inputResult.toString()
         const coinArray = coinPair.split("-")
         const tokenBase = getTokenAddressByName(coinArray[0])
-        const tokenQuote = getTokenAddressByName(coinArray[1])
-        const investmentCoin = data.data[1].inputResult.toString()
+        const tokenQuoteName = coinArray[1]
+        const tokenQuote = getTokenAddressByName(tokenQuoteName)
+        const investmentCoinName = data.data[1].inputResult.toString()
+        const investmentCoinAddress = getTokenAddressByName(investmentCoinName)
         const investmentAmount = data.data[2].inputResult.toString() || "0"
         const lever = data.data[3].inputResult.toString()
-        const longOrShort = data.data[4].inputResult.toString()
+        const longOrShort = data.data[4].inputResult.toString()        
 
         const chainIdDec = parseInt(chainId)
         const isGoerli = chainIdDec == 5 //仅支持goerli
-        if (!coinPair.includes("-") || investmentCoin.includes(":") || isNaN(investmentAmount) || investmentAmount === "0" || lever.includes(":") || longOrShort.includes(":") || !isGoerli) {
-            setPopMsg(isGoerli ? "有参数未填或错误, 请重新填写" : "仅支持goerli测试网, 请切换网络")
+        if (!coinPair.includes("-") || investmentCoinName.includes(":") || isNaN(investmentAmount) || investmentAmount === "0" || lever.includes(":") || longOrShort.includes(":") || !isGoerli) {
+            setPopMsg(isGoerli ? "有参数未填或错误, 请按F5刷新后重填" : "仅支持goerli测试网, 请切换网络")
             setModalVisible(true)
             return
         }
         const contractAddress = networkMapping[chainIdDec.toString()].collateralLever[0]
         investmentAmount = ethers.utils.parseUnits(investmentAmount, 18)
-        const investmentIsQuote = investmentCoin == tokenQuote
+        const investmentIsQuote = investmentCoinName == tokenQuoteName
         const isShort = longOrShort.includes("short")
+        console.log(`openPosition: tokenBase:${tokenBase},tokenQuote:${tokenQuote},investmentAmount:${investmentAmount},investmentIsQuote:${investmentIsQuote},lever:${lever},isshort:${isShort}`)
         //approve
-        const erc20 = new ethers.Contract(tokenBase, erc20Abi, web3);
+        const erc20 = new ethers.Contract(investmentCoinAddress, erc20Abi, web3);
         const signedErc20 = erc20.connect(web3.getSigner())
-        console.log(`begin approve`)       
+        console.log(`begin approve`)
         const txApprove = await signedErc20.approve(contractAddress, investmentAmount)
         // await txApprove.wait(1)
-        
+
         const contract = new ethers.Contract(contractAddress, collateralLeverAbi, web3);
         const signedContract = contract.connect(web3.getSigner())
-        console.log(`openPosition: tokenBase:${tokenBase},tokenQuote:${tokenQuote},investmentAmount:${investmentAmount},investmentIsQuote:${investmentIsQuote},lever:${lever},isshort:${isShort}`)
-        console.log(`begin open position`)       
+        console.log(`begin open position`)
 
         await signedContract.openPosition(tokenBase, tokenQuote, investmentAmount, investmentIsQuote, lever, isShort, {
             gasLimit: txGasLimit
