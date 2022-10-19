@@ -3,7 +3,7 @@ import { gql } from "@apollo/client"
 const GET_ACTIVE_ITEMS = gql`
   query ActivePosition($userAddress:String!) {
   activePositions(
-    first: 5
+    first: 100
     orderBy: id
     orderDirection: desc
     where: {isClosed:false, userAddress: $userAddress}

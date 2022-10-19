@@ -10,7 +10,7 @@ export default function ClosePosition() {
           userAddress: account
         },
       });
-    console.log(account)
+    // console.log(account)
 
     return (
         <div className="flex flex-wrap  gap-1">
@@ -22,7 +22,7 @@ export default function ClosePosition() {
                         (<div>你目前没有仓位</div>)
                         :
                         (positions.activePositions.map((position) => {
-                            console.log(`active positionId: ${position.positionId}`)
+                            // console.log(`active positionId: ${position.positionId}`)
                             const { userAddress, cTokenCollateralAddress, cTokenBorrowingAddress, collateralAmountOfCollateralToken, isShort, positionId } = position
                             return (
                                 <PositionBox

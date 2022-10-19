@@ -4,6 +4,7 @@ import { Modal, Form, useNotification } from "web3uikit";
 import { ethers } from "ethers"
 import { useMoralis, useWeb3Contract } from "react-moralis";
 import collateralLeverAbi from "../constants/CollateralLever.json"
+import erc20Abi from "../constants/ERC20Abi.json"
 import { useState, useEffect } from "react";
 
 
@@ -15,11 +16,12 @@ export default function Home() {
 
     const [popMsg, setPopMsg] = useState("")
     const [needRefresh, setNeedRefresh] = useState(false)
-    // useEffect(() => {
-    //     if (isWeb3Enabled) {
-    //     }        
-
-    // }, [isWeb3Enabled, account, chainId])
+    useEffect(() => {
+        if (isWeb3Enabled) {
+            console.log(`refresing ui`)
+            setNeedRefresh(false)
+        }
+    }, [isWeb3Enabled, account, chainId, needRefresh])
 
     const openPosition = async (data) => {
         const coinPair = data.data[0].inputResult.toString()
@@ -39,20 +41,21 @@ export default function Home() {
             return
         }
         const contractAddress = networkMapping[chainIdDec.toString()].collateralLever[0]
-        investmentAmount = ethers.utils.parseUnits(investmentAmount, 18).toString()
+        investmentAmount = ethers.utils.parseUnits(investmentAmount, 18)
         const investmentIsQuote = investmentCoin == tokenQuote
         const isShort = longOrShort.includes("short")
-
-        console.log(`print openposition params:`)
-        console.log(tokenBase)
-        console.log(tokenQuote)
-        console.log(investmentAmount)
-        console.log(investmentIsQuote)
-        console.log(lever)
-        console.log(isShort)
-        console.log(`begin open position`)
+        //approve
+        const erc20 = new ethers.Contract(tokenBase, erc20Abi, web3);
+        const signedErc20 = erc20.connect(web3.getSigner())
+        console.log(`begin approve`)       
+        const txApprove = await signedErc20.approve(contractAddress, investmentAmount)
+        // await txApprove.wait(1)
+        
         const contract = new ethers.Contract(contractAddress, collateralLeverAbi, web3);
         const signedContract = contract.connect(web3.getSigner())
+        console.log(`openPosition: tokenBase:${tokenBase},tokenQuote:${tokenQuote},investmentAmount:${investmentAmount},investmentIsQuote:${investmentIsQuote},lever:${lever},isshort:${isShort}`)
+        console.log(`begin open position`)       
+
         await signedContract.openPosition(tokenBase, tokenQuote, investmentAmount, investmentIsQuote, lever, isShort, {
             gasLimit: txGasLimit
         })
