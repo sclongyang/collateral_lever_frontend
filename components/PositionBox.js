@@ -4,6 +4,7 @@ import { ethers } from 'ethers'
 import ClosePositionModal from "./ClosePositionModal"
 import { useMoralis, useWeb3Contract } from "react-moralis";
 import cToken2TokenMapping from "../constants/cToken2token.json"
+import { txGasLimit,getTokenNameByCTokenAddress } from "../constants/const.js"
 
 export default function PositionBox({ userAddress, cTokenCollateralAddress, cTokenBorrowingAddress, collateralAmountOfCollateralToken, isShort, positionId }) {
     const [showModal, setShowModal] = useState(false)
@@ -11,8 +12,8 @@ export default function PositionBox({ userAddress, cTokenCollateralAddress, cTok
     const { isWeb3Enabled, chainId } = useMoralis()
     const { runContractFunction } = useWeb3Contract()
 
-    const collateralTokenName = cToken2TokenMapping[cTokenCollateralAddress.toLowerCase()].tokenName[0]
-    const borrowingTokenName = cToken2TokenMapping[cTokenBorrowingAddress.toLowerCase()].tokenName[0]
+    const collateralTokenName = getTokenNameByCTokenAddress(cTokenCollateralAddress.toLowerCase())
+    const borrowingTokenName = getTokenNameByCTokenAddress(cTokenBorrowingAddress.toLowerCase())
 
     collateralAmountOfCollateralToken = ethers.utils.formatUnits(collateralAmountOfCollateralToken, "ether")
     const handleCardClick = async () => {

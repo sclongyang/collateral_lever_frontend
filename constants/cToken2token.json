@@ -1,14 +1,12 @@
-{
-    "0x0545a8eaf7ff6bb6f708cbb544ea55dbc2ad7b2a": {
+[
+    {
+        "cTokenAddress": "0x0545a8eaf7ff6bb6f708cbb544ea55dbc2ad7b2a",
         "tokenAddress": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
-        "tokenName": [
-            "DAI"
-        ]
+        "tokenName": "DAI"
     },
-    "0x0ff50a12759b081bb657adacf712c52bb015f1cd": {
+    {
+        "cTokenAddress": "0x0ff50a12759b081bb657adacf712c52bb015f1cd",
         "tokenAddress": "0xc00e94Cb662C3520282E6f5717214004A7f26888",
-        "tokenName": [
-            "COMP"
-        ]
+        "tokenName": "COMP"
     }
-}
+]
