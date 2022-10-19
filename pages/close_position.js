@@ -10,7 +10,6 @@ export default function ClosePosition() {
             userAddress: account
         },
     });
-    // console.log(account)
 
     return (
         <div className="flex flex-wrap  gap-1">
