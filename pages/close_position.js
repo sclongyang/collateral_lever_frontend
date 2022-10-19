@@ -4,12 +4,12 @@ import GET_ACTIVE_ITEMS from "../constants/subgraphQueries";
 import PositionBox from "../components/PositionBox";
 
 export default function ClosePosition() {
-    const { isWeb3Enabled, account } = useMoralis()    
+    const { isWeb3Enabled, account } = useMoralis()
     const { loading, error, data: positions } = useQuery(GET_ACTIVE_ITEMS, {
         variables: {
-          userAddress: account
+            userAddress: account
         },
-      });
+    });
     // console.log(account)
 
     return (
@@ -21,21 +21,22 @@ export default function ClosePosition() {
                     positions.activePositions.length == 0 ?
                         (<div>你目前没有仓位</div>)
                         :
-                        (positions.activePositions.map((position) => {
-                            // console.log(`active positionId: ${position.positionId}`)
-                            const { userAddress, cTokenCollateralAddress, cTokenBorrowingAddress, collateralAmountOfCollateralToken, isShort, positionId } = position
-                            return (
-                                <PositionBox
-                                    userAddress={userAddress}
-                                    cTokenCollateralAddress={cTokenCollateralAddress}
-                                    cTokenBorrowingAddress={cTokenBorrowingAddress}
-                                    collateralAmountOfCollateralToken={collateralAmountOfCollateralToken}
-                                    isShort={isShort}
-                                    positionId={positionId}
-                                    key={`${positionId}`}
-                                />
-                            )
-                        })
+                        (
+                            positions.activePositions.map((position) => {
+                                // console.log(`active positionId: ${position.positionId}`)
+                                const { userAddress, cTokenCollateralAddress, cTokenBorrowingAddress, collateralAmountOfCollateralToken, isShort, positionId } = position
+                                return (
+                                    <PositionBox
+                                        userAddress={userAddress}
+                                        cTokenCollateralAddress={cTokenCollateralAddress}
+                                        cTokenBorrowingAddress={cTokenBorrowingAddress}
+                                        collateralAmountOfCollateralToken={collateralAmountOfCollateralToken}
+                                        isShort={isShort}
+                                        positionId={positionId}
+                                        key={`${positionId}`}
+                                    />
+                                )
+                            })
 
                         )
                 )
