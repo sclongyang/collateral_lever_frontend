@@ -30,24 +30,22 @@ export default function Home() {
         const tokenBase = getTokenAddressByName(coinArray[0])
         const tokenQuoteName = coinArray[1]
         const tokenQuote = getTokenAddressByName(tokenQuoteName)
-        const investmentCoinName = data.data[1].inputResult.toString()
-        const investmentCoinAddress = getTokenAddressByName(investmentCoinName)
-        const investmentAmount = data.data[2].inputResult.toString() || "0"
-        const lever = data.data[3].inputResult.toString()
-        const longOrShort = data.data[4].inputResult.toString()        
+        const investmentAmount = data.data[1].inputResult.toString() || "0"
+        const lever = data.data[2].inputResult.toString()
+        const longOrShort = data.data[3].inputResult.toString()        
+        const investmentCoinAddress = tokenBase
 
         const chainIdDec = parseInt(chainId)
         const isGoerli = chainIdDec == 5 //仅支持goerli
-        if (!coinPair.includes("-") || investmentCoinName.includes(":") || isNaN(investmentAmount) || investmentAmount === "0" || lever.includes(":") || longOrShort.includes(":") || !isGoerli) {
+        if (!coinPair.includes("-") || isNaN(investmentAmount) || investmentAmount === "0" || lever.includes(":") || longOrShort.includes(":") || !isGoerli) {
             setPopMsg(isGoerli ? "有参数未填或错误, 请按F5刷新后重填" : "仅支持goerli测试网, 请切换网络")
             setModalVisible(true)
             return
         }
         const contractAddress = networkMapping[chainIdDec.toString()].collateralLever[0]
-        investmentAmount = ethers.utils.parseUnits(investmentAmount, 18)
-        const investmentIsQuote = investmentCoinName == tokenQuoteName
+        investmentAmount = ethers.utils.parseUnits(investmentAmount, 18)        
         const isShort = longOrShort.includes("short")
-        console.log(`openPosition: tokenBase:${tokenBase},tokenQuote:${tokenQuote},investmentAmount:${investmentAmount},investmentIsQuote:${investmentIsQuote},lever:${lever},isshort:${isShort}`)
+        console.log(`openPosition: tokenBase:${tokenBase},tokenQuote:${tokenQuote},investmentAmount:${investmentAmount},lever:${lever},isshort:${isShort}`)
         //approve
         const erc20 = new ethers.Contract(investmentCoinAddress, erc20Abi, web3);
         const signedErc20 = erc20.connect(web3.getSigner())
@@ -59,7 +57,7 @@ export default function Home() {
         const signedContract = contract.connect(web3.getSigner())
         console.log(`begin open position`)
 
-        await signedContract.openPosition(tokenBase, tokenQuote, investmentAmount, investmentIsQuote, lever, isShort, {
+        await signedContract.openPosition(tokenBase, tokenQuote, investmentAmount, false, lever, isShort, {
             gasLimit: txGasLimit
         })
         setNeedRefresh(true)
@@ -152,18 +150,9 @@ export default function Home() {
                                     "DAI-COMP",
                                     //   "DAI_USDC",                                                  
                                 ],
-                            },
+                            },         
                             {
-                                "name": "investmentCoin",
-                                "type": "radios",
-                                "value": "要投入的币种:",
-                                "options": [
-                                    "DAI",
-                                    "COMP",
-                                ]
-                            },
-                            {
-                                name: "要投入的币种金额(例如 0.03)",
+                                name: "要投入的金额(单位:DAI)",
                                 type: "text",
                                 value: "",
                                 key: "amount",
@@ -180,10 +169,10 @@ export default function Home() {
                             {
                                 "name": "longShort",
                                 "type": "radios",
-                                "value": "做多做空:",
+                                "value": "做多做空(goerli流动性不够,有些币对借贷会失败,目前仅支持做多.fork mainnet可以做空):",
                                 "options": [
                                     "Market-long(做多) DAI",
-                                    "Market-short(做空) DAI",
+                                    // "Market-short(做空) DAI",
                                 ]
                             },
                         ]}
