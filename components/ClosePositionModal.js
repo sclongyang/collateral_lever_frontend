@@ -33,6 +33,7 @@ export default function ClosePositionModal({ isVisible, onClose, positionId }) {
             onOk={async () => {
                 const successMsg = "平仓成功"
                 const title = "平仓返回值"
+                onClose()
                 if (isGoerli) {
                     const contractAddress = networkMapping[parseInt(chainId).toString()].collateralLever[0]
                     console.log(`开始平仓`)
@@ -51,7 +52,6 @@ export default function ClosePositionModal({ isVisible, onClose, positionId }) {
                     //     onError: (e) => handleCallBack(false, successMsg, title, e),
                     // })
                 }
-                onClose()
             }
             }>
             <div
