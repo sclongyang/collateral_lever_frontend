@@ -128,6 +128,7 @@ export default function Home() {
                             </div>
                         </div>
                     </Modal>
+                    <div>说明: goerli流动性不足,有些'币对'借贷会失败,目前仅支持一个币对做多 (fork mainnet可以做空成功)</div>
                     <Form
                         id="OpenPositionForm"
                         title="开仓"
@@ -169,7 +170,7 @@ export default function Home() {
                             {
                                 "name": "longShort",
                                 "type": "radios",
-                                "value": "做多做空(goerli流动性不够,有些币对借贷会失败,目前仅支持做多.fork mainnet可以做空):",
+                                "value": "做多做空:",
                                 "options": [
                                     "Market-long(做多) DAI",
                                     // "Market-short(做空) DAI",
