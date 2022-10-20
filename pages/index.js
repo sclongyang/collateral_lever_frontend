@@ -32,7 +32,7 @@ export default function Home() {
         const tokenQuote = getTokenAddressByName(tokenQuoteName)
         const investmentAmount = data.data[1].inputResult.toString() || "0"
         const lever = data.data[2].inputResult.toString()
-        const longOrShort = data.data[3].inputResult.toString()        
+        const longOrShort = data.data[3].inputResult.toString()
         const investmentCoinAddress = tokenBase
 
         const chainIdDec = parseInt(chainId)
@@ -43,7 +43,7 @@ export default function Home() {
             return
         }
         const contractAddress = networkMapping[chainIdDec.toString()].collateralLever[0]
-        investmentAmount = ethers.utils.parseUnits(investmentAmount, 18)        
+        investmentAmount = ethers.utils.parseUnits(investmentAmount, 18)
         const isShort = longOrShort.includes("short")
         console.log(`openPosition: tokenBase:${tokenBase},tokenQuote:${tokenQuote},investmentAmount:${investmentAmount},lever:${lever},isshort:${isShort}`)
         //approve
@@ -129,7 +129,7 @@ export default function Home() {
                         </div>
                     </Modal>
                     <div>说明: goerli流动性不足,有些'币对'借贷会失败,所以前端做了限制,仅支持一个币对做多 (fork mainnet可以投入另一个币种,也可以做空)</div>
-                    <div className="text-xl">提示: 钱包要有DAI, 可去uniswap goerli兑换, goerli的DAI地址为: 0x2899a03ffDab5C90BADc5920b4f53B0884EB13cC</div>
+                    <div className="text-xl">提示: 钱包要有DAI, 可从uniswap goerli兑换, goerli的DAI地址为: 0x2899a03ffDab5C90BADc5920b4f53B0884EB13cC</div>
                     <Form
                         id="OpenPositionForm"
                         title="开仓"
@@ -152,7 +152,7 @@ export default function Home() {
                                     "DAI-COMP",
                                     //   "DAI_USDC",                                                  
                                 ],
-                            },         
+                            },
                             {
                                 name: "要投入的金额(单位:DAI)",
                                 type: "text",
