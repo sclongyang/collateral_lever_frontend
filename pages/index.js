@@ -128,7 +128,8 @@ export default function Home() {
                             </div>
                         </div>
                     </Modal>
-                    <div>说明: goerli流动性不足,有些'币对'借贷会失败,目前仅支持一个币对做多 (fork mainnet可以做空成功)</div>
+                    <div>说明: goerli流动性不足,有些'币对'借贷会失败,所以前端做了限制,仅支持一个币对做多 (fork mainnet可以投入另一个币种,也可以做空)</div>
+                    <div>提示: 需要先持有DAI, 可去uniswap goerli兑换, goerli的DAI地址为: 0x2899a03ffDab5C90BADc5920b4f53B0884EB13cC</div>
                     <Form
                         id="OpenPositionForm"
                         title="开仓"
